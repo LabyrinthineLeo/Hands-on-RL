@@ -20,10 +20,20 @@ class ReplayBuffer:
         return len(self.buffer)
 
 def moving_average(a, window_size):
-    cumulative_sum = np.cumsum(np.insert(a, 0, 0)) 
+    """
+    平滑处理列表
+    :param a:
+    :param window_size:
+    :return:
+    """
+    # 累积
+    cumulative_sum = np.cumsum(np.insert(a, 0, 0))
+    # 计算每个窗口的均值
     middle = (cumulative_sum[window_size:] - cumulative_sum[:-window_size]) / window_size
     r = np.arange(1, window_size-1, 2)
+    # 平滑左边缘
     begin = np.cumsum(a[:window_size-1])[::2] / r
+    # 平滑右边缘
     end = (np.cumsum(a[:-window_size:-1])[::2] / r)[::-1]
     return np.concatenate((begin, middle, end))
 
