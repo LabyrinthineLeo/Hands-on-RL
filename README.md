@@ -12,4 +12,4 @@ Tips: 若运行gym环境的代码时遇到报错，请尝试pip install gym==0.1
 
 * 本书配套的强化学习课程已上线到[伯禹学习平台](https://www.boyuai.com/elites/course/xVqhU42F5IDky94x)，所有人都可以免费学习和讨论。
 
-![](https://boyuai.oss-cn-shanghai.aliyuncs.com/disk/tmp/hrl-poster.jpeg)
+[//]: # (![]&#40;https://boyuai.oss-cn-shanghai.aliyuncs.com/disk/tmp/hrl-poster.jpeg&#41;)

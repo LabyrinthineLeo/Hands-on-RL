@@ -49,7 +49,9 @@ def train_on_policy_agent(env, agent, num_episodes):
                 done = False
 
                 while not done:
+                    # 获取动作
                     action = agent.take_action(state)
+                    # 环境交互
                     next_state, reward, done, *_ = env.step(action)
                     transition_dict['states'].append(state)
                     transition_dict['actions'].append(action)
