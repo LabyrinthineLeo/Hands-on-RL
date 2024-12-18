@@ -73,24 +73,41 @@ def train_on_policy_agent(env, agent, num_episodes):
     return return_list
 
 def train_off_policy_agent(env, agent, num_episodes, replay_buffer, minimal_size, batch_size):
+    """
+    离线更新训练
+    :param env:
+    :param agent:
+    :param num_episodes: 训练的episode数
+    :param replay_buffer: 数据buffer池
+    :param minimal_size: buffer池数量阈值
+    :param batch_size:
+    :return:
+    """
     return_list = []
     for i in range(10):
         with tqdm(total=int(num_episodes/10), desc='Iteration %d' % i) as pbar:
             for i_episode in range(int(num_episodes/10)):
                 episode_return = 0
-                state = env.reset()
+                state = env.reset()[0]
                 done = False
 
                 while not done:
+                    # 获取动作
                     action = agent.take_action(state)
-                    next_state, reward, done, _ = env.step(action)
+                    # 环境交互
+                    next_state, reward, done, *_ = env.step(action)
+                    # buffer池添加数据
                     replay_buffer.add(state, action, reward, next_state, done)
                     state = next_state
                     episode_return += reward
+
                     if replay_buffer.size() > minimal_size:
+                        # 采样batch数据
                         b_s, b_a, b_r, b_ns, b_d = replay_buffer.sample(batch_size)
                         transition_dict = {'states': b_s, 'actions': b_a, 'next_states': b_ns, 'rewards': b_r, 'dones': b_d}
+                        # agent更新训练
                         agent.update(transition_dict)
+
                 return_list.append(episode_return)
                 if (i_episode+1) % 10 == 0:
                     pbar.set_postfix({'episode': '%d' % (num_episodes/10 * i + i_episode+1), 'return': '%.3f' % np.mean(return_list[-10:])})
