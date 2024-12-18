@@ -80,6 +80,7 @@ def train_off_policy_agent(env, agent, num_episodes, replay_buffer, minimal_size
                 episode_return = 0
                 state = env.reset()
                 done = False
+
                 while not done:
                     action = agent.take_action(state)
                     next_state, reward, done, _ = env.step(action)
@@ -98,9 +99,18 @@ def train_off_policy_agent(env, agent, num_episodes, replay_buffer, minimal_size
 
 
 def compute_advantage(gamma, lmbda, td_delta):
+    """
+    优势函数计算
+    :param gamma: 折扣因子
+    :param lmbda: 超参，控制步长TD-Error的权重
+    :param td_delta: [seq_len, 1] TD-Error
+    :return:
+    """
+    # td error
     td_delta = td_delta.detach().numpy()
     advantage_list = []
     advantage = 0.0
+    # 从后递推
     for delta in td_delta[::-1]:
         advantage = gamma * lmbda * advantage + delta
         advantage_list.append(advantage)
